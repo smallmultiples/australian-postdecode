@@ -17,14 +17,14 @@ body {
     color: #cbcbcb;
 }
 a { text-decoration: none; color: #999a63 }
-#map { width: 1200px; height: 1000px; }
+#map { width: 1200px; height: 800px; }
 
 /* SVG styling */
 svg { background-color: #16161d; }
 text { fill: #cbcbcb; font-size: 24px; }
 #localities { fill: #cbcbcb; font-size: 16px; }
 #states { fill: none; stroke: #999; }
-rect { stroke: none; }
+rect { stroke: none }
 .selected { fill: #fff; }
 .unselected { fill: #ffcb05; }
 </style>
@@ -49,13 +49,14 @@ rect { stroke: none; }
 <script type="text/javascript">
 
 // Display: configurable parameters (see also HTML)
-var width = 1200, height = 1000;
+var width = 1200, height = 800;
 var instructions = "";
+var POSTCODE_SIZE = 4;
 
 // Display: geographic projection
 var proj = d3.geo.mercator()
-    .scale(1300)
-    .translate([-2400, -150]);
+    .scale(800)
+    .translate([-1300, 0]);
 var path = d3.geo.path().projection(proj);
 
 // Interaction: stored state
@@ -218,7 +219,6 @@ function key() {
         
         nonOriginPostcodes = postcodes.filter(function(d) { return d.lat != "0" && d.long != "0" })
         originPostcodes = postcodes.filter(function(d) { return d.lat == "0" && d.long == "0" })
-        // 81 LVRs
         
         // Display: all the dots for postcode centroids
         map.append("g").attr("id", "postcodedots");
@@ -228,7 +228,7 @@ function key() {
             .attr("x", function(d) { var p = proj([d.long, d.lat]); return p ? p[0] : null; })
             .attr("y", function(d) { var p = proj([d.long, d.lat]); return p ? p[1] : null; })
             .attr("class", "unselected")
-            .attr("width", 1.5).attr("height", 1.5);
+            .attr("width", POSTCODE_SIZE).attr("height", POSTCODE_SIZE);
 
         // Interaction: handle keyboard events (keydown to capture backspace)
         d3.select("body").on("keydown", key);
