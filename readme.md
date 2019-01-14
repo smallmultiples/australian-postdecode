@@ -17,6 +17,8 @@ Based on https://www.matthewproctor.com/australian_postcodes and then a geocode 
 
 Original created by https://eagereyes.org/zipscribble-maps/interactive-zipscribble-map including an incomplete Australian version https://eagereyes.org/zipscribble-maps/australia
 
+Prototype in Carto just simply joining the lines in sequence https://smallmultiples.carto.com/builder/14ba493f-0b2f-4350-bfac-2e45c30fe7dd
+
 ### Backlog
 - Process/data ref/source/limitations
 - Label outliers
