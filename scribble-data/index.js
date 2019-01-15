@@ -129,6 +129,7 @@ function makePostdecodeData(postcodes) {
             states: postcode.states,
             postcode: postcode.postcode,
             localities,
+            centroid: postcode.centroid,
         })
     })
 }
