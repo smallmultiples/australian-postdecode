@@ -2,7 +2,8 @@
 var width = 1200,
     height = 800;
 var instructions = "";
-var POSTCODE_SIZE = 4;
+var POSTCODE_SIZE = 2;
+var zoomEnabled = true;
 
 // Display: geographic projection
 var proj = d3.geo
@@ -19,37 +20,6 @@ queue()
     .defer(d3.json, "au-states.geojson")
     .defer(d3.json, "postdecode.json")
     .await(render);
-
-// Interaction: handle keyboard input
-function key() {
-    var code = d3.event.keyCode;
-
-    if (code == 32) {
-        // Space: clear code
-        updateSelection("");
-    } else if (code == 37 || code == 8) {
-        // Backspace / left arrow: remove one number
-        if (selectedPostcode.length > 0) {
-            updateSelection(
-                selectedPostcode.substr(0, selectedPostcode.length - 1)
-            );
-        }
-        // Prevent the browser from going back in the URL history
-        d3.event.preventDefault();
-    } else if (code >= 48 && code <= 57) {
-        // number keys
-        appendToSelection(String.fromCharCode(code));
-    } else if (code >= 96 && code <= 105) {
-        // numeric keypad
-        appendToSelection(String.fromCharCode(code - 48));
-    }
-}
-// Interaction: add a single digit to the postcode if possible
-function appendToSelection(digit) {
-    if (selectedPostcode.length < 5) {
-        updateSelection(selectedPostcode + "" + digit);
-    }
-}
 
 // Data: is the given postcode in the selection?
 function postcodeSelected(postcode) {
@@ -206,13 +176,15 @@ function render(error, states, postcodes) {
         .attr("width", POSTCODE_SIZE)
         .attr("height", POSTCODE_SIZE);
 
-    // Interaction: handle keyboard events (keydown to capture backspace)
-    d3.select("body").on("keydown", key);
-}
+    var zoomCheckbox = d3.select("[name=zoom]");
+    zoomCheckbox.on("change", function() {
+        zoomEnabled = !zoomCheckbox.node().checked;
+        updateSelection(selectedPostcode);
+    });
+    
+    var input = d3.select("input");
+    input.on("input", function(e) {
+        updateSelection(this.value);
+    });
 
-var zoomCheckbox = d3.select("[name=zoom]");
-var zoomEnabled = true;
-zoomCheckbox.on("change", function() {
-    zoomEnabled = !zoomCheckbox.node().checked;
-    updateSelection(selectedPostcode);
-});
+}

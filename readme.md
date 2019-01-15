@@ -3,9 +3,6 @@
 ## Australian Postdecode
 
 ### Backlog
-- make animation less clunky
-- optimisations/performance
-- turn typing into an input box to make it accessible and so it works on touchscreens
 - general aesthetic improvements to make it look different to the original
 - general UX/UI improvements
 - deploy.

@@ -1,52 +1,58 @@
 <!DOCTYPE html>
 <html lang="eng">
+    <head>
+        <meta charset="utf-8">
+        <title> Australian Postdecoder </title>
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="queue.min.js"></script>
 
-<head>
+        <style type="text/css">
+            /* HTML styling */
+            html { background-color: #16161d; }
+            body {
+                font-family: Helvetica, Arial, sans-serif; font-size: 16px;
+                color: #cbcbcb;
+            }
+            a { text-decoration: none; color: #999a63 }
+            #map { width: 1200px; height: 800px; }
+            input {
+                background: none;
+                border: none;
+                border-bottom: 1px solid white;
+                color: white;
+                outline: none;
+                padding-bottom: 4px;
+            }
 
-<meta charset="utf-8">
-<title> Australian Postdecoder </title>
+            input:focus {
+                border-bottom-color: #ffcb05;
+            }
 
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="queue.min.js"></script>
+            /* SVG styling */
+            svg { background-color: #16161d; }
+            text { fill: #cbcbcb; font-size: 24px; }
+            #localities { fill: #cbcbcb; font-size: 16px; }
+            #states { fill: none; stroke: #999; }
+            rect { stroke: none }
+            .selected { fill: #fff; }
+            .unselected { fill: #ffcb05; }
 
-<style type="text/css">
-/* HTML styling */
-html { background-color: #16161d; }
-body {
-    font-family: Helvetica, Arial, sans-serif; font-size: 16px;
-    color: #cbcbcb;
-}
-a { text-decoration: none; color: #999a63 }
-#map { width: 1200px; height: 800px; }
-
-/* SVG styling */
-svg { background-color: #16161d; }
-text { fill: #cbcbcb; font-size: 24px; }
-#localities { fill: #cbcbcb; font-size: 16px; }
-#states { fill: none; stroke: #999; }
-rect { stroke: none }
-.selected { fill: #fff; }
-.unselected { fill: #ffcb05; }
-</style>
-</head>
-<body>
-  <center>
-  <div id="map"></div>
-  <p style="padding-top: 70px; font-size: 120%">
-      Enter a postcode
-  </p>
-  <label>
-    Disable zoom
-    <input name="zoom" type="checkbox" />
-  </label>
-  <p>An Australian version of
-      <a href="http://benfry.com/">Ben Fry</a>'s
-      <a href="http://benfry.com/zipdecode/">zipdecode</a><br>
-      based on <a href="https://github.com/NelsonMinar/zipdecode-js">Nelson Minar's D3.js code</a>.
-  </p>
-</center>
-
-<script type="text/javascript" src="postdecode.js">
-</script>
-
-</body>
+        </style>
+    </head>
+    <body>
+        <center>
+            <div id="map"></div>
+            <input style="padding-top: 70px; font-size: 120%" placeholder="Enter a postcode"></input>
+            <label>
+                Disable zoom
+                <input name="zoom" type="checkbox" />
+            </label>
+            <p>An Australian version of
+                <a href="http://benfry.com/">Ben Fry</a>'s
+                <a href="http://benfry.com/zipdecode/">zipdecode</a><br>
+                based on <a href="https://github.com/NelsonMinar/zipdecode-js">Nelson Minar's D3.js code</a>.
+            </p>
+        </center>
+        <script type="text/javascript" src="postdecode.js"></script>
+    </body>
+</html>
