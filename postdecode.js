@@ -59,7 +59,7 @@ function updateSelection(n) {
                 return d.__data__.localities.join(", ");
             })
             .join(", ");
-        d3.select("#localities").text(localities);
+        d3.select("#localities").text(localities || "No localities for postcode");
     } else {
         d3.select("#localities").text("");
     }
@@ -180,6 +180,7 @@ function render(error, states, postcodes) {
     
     var input = d3.select("input");
     input.on("input", function(e) {
+        this.value = this.value.slice(0, 4);
         updateSelection(this.value);
     });
 
