@@ -1,4 +1,4 @@
-// Required files: 
+// Required files:
 // -    poa-2016-aust.geo.json -> Converted from "Postal Areas ASGS Ed 2016 Digital Boundaries in MapInfo Interchange Format"
 //      available via ABS (http://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.003July%202016?OpenDocument)
 //      Converted to geojson in QGIS.
@@ -8,7 +8,9 @@ const fs = require("fs").promises;
 const turf = require("turf");
 const _ = require("lodash/fp");
 
-function processPostcodes(rawPostcodes, availablePostcodes) {
+function processPostcodes(rawPostcodes, shapes) {
+    const availablePostcodes = shapes.map(d => d.properties.POA_CODE16);
+
     const filtered = rawPostcodes.filter(d => {
         if (d.locality.includes(" MC") || d.dc.includes(" MC")) return false;
         return availablePostcodes.includes(d.postcode);
@@ -18,11 +20,13 @@ function processPostcodes(rawPostcodes, availablePostcodes) {
     const grouped = Object.entries(groupedMap).map(([key, values]) => {
         const localities = _.uniq(values.map(v => v.locality + ";" + v.state));
         const states = _.uniq(values.map(v => v.state));
+        const centroid = getCentroid(key, shapes);
         return {
             postcode: key,
             dc: values[0].dc,
             localities,
             states,
+            centroid,
         };
     });
 
@@ -36,14 +40,12 @@ async function gatherData() {
 
     const shapes = postcodeShapefile.features;
 
-    const availablePostcodes = shapes.map(d => d.properties.POA_CODE16);
-
     console.log("Loading postcode data...");
     const postcodeFile = await fs.readFile("../postcodes.csv", {
         encoding: "utf-8",
     });
     const postcodesRaw = dsv.csvParse(postcodeFile);
-    const postcodes = processPostcodes(postcodesRaw, availablePostcodes);
+    const postcodes = processPostcodes(postcodesRaw, shapes);
 
     return {
         shapes,
@@ -79,7 +81,7 @@ function getCentroid(postcode, shapes) {
     return turf.centroid(feature).geometry.coordinates;
 }
 
-function makeLineFeatureCollection(postcodesByState, shapes) {
+function makeLineFeatureCollection(postcodesByState) {
     const featuresByState = postcodesByState.map(state => {
         const sortedPostcodes = state.postcodes.sort(
             (a, b) => a.postcode - b.postcode
@@ -88,24 +90,14 @@ function makeLineFeatureCollection(postcodesByState, shapes) {
             sortedPostcodes.map((fromPostcode, index) => {
                 if (index === sortedPostcodes.length - 1) return null;
                 const toPostcode = sortedPostcodes[index + 1];
-
-                const thisFeatureCentroid = getCentroid(
-                    fromPostcode.postcode,
-                    shapes
-                );
-                if (!thisFeatureCentroid) return null;
-
-                const nextFeatureCentroid = getCentroid(
-                    toPostcode.postcode,
-                    shapes
-                );
-                if (!nextFeatureCentroid) return null;
-
                 return {
                     type: "Feature",
                     geometry: {
                         type: "LineString",
-                        coordinates: [thisFeatureCentroid, nextFeatureCentroid],
+                        coordinates: [
+                            fromPostcode.centroid,
+                            toPostcode.centroid,
+                        ],
                     },
                     properties: {
                         state: state.state,
@@ -128,6 +120,19 @@ function makeLineFeatureCollection(postcodesByState, shapes) {
     };
 }
 
+function makePostdecodeData(postcodes) {
+    return postcodes.map(postcode => {
+        const localities = postcode.states.length === 01
+            ? postcode.localities.map(d => d.split(";")[0])
+            : postcode.localities.map(d => d.replace(";", " (") + ")")
+        return ({
+            states: postcode.states,
+            postcode: postcode.postcode,
+            localities,
+        })
+    })
+}
+
 async function writeFile(name, featureCollection) {
     return fs.writeFile(name, JSON.stringify(featureCollection), {
         encoding: "utf-8",
@@ -144,13 +149,16 @@ async function go() {
     const postcodesByState = groupByState(postcodes);
 
     console.log("Generating scribble lines...");
-    const lineFeatureCollection = makeLineFeatureCollection(
-        postcodesByState,
-        shapes
-    );
+    const lineFeatureCollection = makeLineFeatureCollection(postcodesByState);
 
     console.log("Writing scribbles to 'scribbles.geojson'");
     await writeFile("scribbles.geojson", lineFeatureCollection);
+
+    console.log("Generating Postdecode data...");
+    const postDecodeData = makePostdecodeData(postcodes);
+
+    console.log("Writing postdecode to '../postdecode.json'");
+    await writeFile("../postdecode.json", postDecodeData);
 }
 
 go()
