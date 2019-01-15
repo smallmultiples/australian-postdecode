@@ -37,7 +37,7 @@ function updateSelection(n) {
     d3.select("#selected").text(t);
 
     // Recolor all the postcode dots. Sadly this is slow, a transition won't work
-    var dots = d3.select("#postcodedots").selectAll("rect");
+    var dots = d3.select("#postcodedots").selectAll(".dot");
     var selected = dots
         .classed("selected", false)
         .classed("unselected", true)
@@ -88,11 +88,9 @@ function zoomIn(bounds, dots) {
 
     dots.transition()
         .duration(750)
-        .attr("width", 2 / scale)
-        .attr("height", 2 / scale)
+        .attr("r", 1 / scale)
         .filter(".selected")
-        .attr("width", 3 / scale)
-        .attr("height", 3 / scale);
+        .attr("r", 1.5 / scale)
 }
 
 function zoomOut(dots) {
@@ -103,8 +101,7 @@ function zoomOut(dots) {
 
     dots.transition()
         .duration(200)
-        .attr("width", 1.5)
-        .attr("height", 1.5);
+        .attr("r", 0.75)
 }
 
 function getBBox(coords) {
@@ -160,21 +157,20 @@ function render(error, states, postcodes) {
     // Display: all the dots for postcode centroids
     map.append("g").attr("id", "postcodedots");
     d3.select("#postcodedots")
-        .selectAll("rect")
+        .selectAll(".dot")
         .data(nonOriginPostcodes)
         .enter()
-        .append("rect")
-        .attr("x", function(d) {
+        .append("circle")
+        .attr("cx", function(d) {
             var p = proj([d.centroid[0], d.centroid[1]]);
             return p ? p[0] : null;
         })
-        .attr("y", function(d) {
+        .attr("cy", function(d) {
             var p = proj([d.centroid[0], d.centroid[1]]);
             return p ? p[1] : null;
         })
-        .attr("class", "unselected")
-        .attr("width", POSTCODE_SIZE)
-        .attr("height", POSTCODE_SIZE);
+        .attr("class", "unselected dot")
+        .attr("r", POSTCODE_SIZE / 2);
 
     var zoomCheckbox = d3.select("[name=zoom]");
     zoomCheckbox.on("change", function() {
