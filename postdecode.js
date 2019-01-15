@@ -17,7 +17,7 @@ var selectedPostcode = "";
 // Display: AJAX load the data files, then call render()
 queue()
     .defer(d3.json, "au-states.geojson")
-    .defer(d3.csv, "postcodes.csv")
+    .defer(d3.json, "postdecode.json")
     .await(render);
 
 // Interaction: handle keyboard input
@@ -78,14 +78,15 @@ function updateSelection(n) {
         .classed("selected", true);
 
     var coords = selected[0].map(function(d) {
-        return proj([+d.__data__.long, +d.__data__.lat]);
+        return proj([+d.__data__.centroid[0], +d.__data__.centroid[1]]);
     });
+    
 
     // Display the name
     if (selectedPostcode.length == 4) {
         var localities = selected[0]
             .map(function(d) {
-                return d.__data__.locality;
+                return d.__data__.localities.join(", ");
             })
             .join(", ");
         d3.select("#localities").text(localities);
@@ -180,10 +181,10 @@ function render(error, states, postcodes) {
         .attr("d", path);
 
     nonOriginPostcodes = postcodes.filter(function(d) {
-        return d.lat != "0" && d.long != "0";
+        return d.centroid[0] != "0" && d.centroid[1] != "0";
     });
     originPostcodes = postcodes.filter(function(d) {
-        return d.lat == "0" && d.long == "0";
+        return d.centroid[0] == "0" && d.centroid[1] == "0";
     });
 
     // Display: all the dots for postcode centroids
@@ -194,11 +195,11 @@ function render(error, states, postcodes) {
         .enter()
         .append("rect")
         .attr("x", function(d) {
-            var p = proj([d.long, d.lat]);
+            var p = proj([d.centroid[0], d.centroid[1]]);
             return p ? p[0] : null;
         })
         .attr("y", function(d) {
-            var p = proj([d.long, d.lat]);
+            var p = proj([d.centroid[0], d.centroid[1]]);
             return p ? p[1] : null;
         })
         .attr("class", "unselected")
