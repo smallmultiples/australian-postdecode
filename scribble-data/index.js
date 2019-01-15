@@ -19,7 +19,7 @@ function processPostcodes(rawPostcodes, availablePostcodes) {
         const localities = _.uniq(values.map(v => v.locality + ";" + v.state));
         const states = _.uniq(values.map(v => v.state));
         return {
-            postcode: parseInt(key),
+            postcode: key,
             dc: values[0].dc,
             localities,
             states,
