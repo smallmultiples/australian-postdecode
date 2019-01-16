@@ -88,9 +88,9 @@ function zoomIn(bounds, dots) {
 
     dots.transition()
         .duration(750)
-        .attr("r", 1 / scale)
+        .attr("r", POSTCODE_SIZE / scale)
         .filter(".selected")
-        .attr("r", 1.5 / scale)
+        .attr("r", POSTCODE_SIZE / scale * 0.75)
 }
 
 function zoomOut(dots) {
@@ -101,7 +101,7 @@ function zoomOut(dots) {
 
     dots.transition()
         .duration(200)
-        .attr("r", 0.75)
+        .attr("r", POSTCODE_SIZE)
 }
 
 function getBBox(coords) {
@@ -170,7 +170,7 @@ function render(error, states, postcodes) {
             return p ? p[1] : null;
         })
         .attr("class", "unselected dot")
-        .attr("r", POSTCODE_SIZE / 2);
+        .attr("r", POSTCODE_SIZE);
 
     var zoomCheckbox = d3.select("[name=zoom]");
     zoomCheckbox.on("change", function() {
