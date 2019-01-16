@@ -5,12 +5,12 @@
         <title> Australian Postdecoder </title>
         <script src="//d3js.org/d3.v3.min.js"></script>
         <script src="queue.min.js"></script>
-        <link href="https://fonts.googleapis.com/css?family=Questrial" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed" rel="stylesheet">
         <style type="text/css">
             /* HTML styling */
             html { background-color: #FAFAFA; }
             body {
-                font-family: "Questrial", Helvetica, Arial, sans-serif; font-size: 16px;
+                font-family: "Roboto Condensed", Helvetica, Arial, sans-serif; font-size: 16px;
                 color: #333;
             }
             #container {
@@ -28,18 +28,19 @@
             a { text-decoration: none; color: #91D7E8 }
             #map { width: 1200px; height: 800px; }
             .postcodeInput {
-                font-family: "Questrial", Helvetica, Arial, sans-serif; font-size: 16px;
+                font-family: "Roboto Condensed", Helvetica, Arial, sans-serif; font-size: 16px;
                 background: none;
                 border: none;
-                border-bottom: 1px solid #333;
-                color: #333;
+                border-bottom: 3px solid #888;
+                color: #555;
                 outline: none;
-                padding-bottom: 4px;
+                padding-bottom: 12px;
                 padding-top: 70px;
                 margin-bottom: 70px;
                 font-size: 3rem;
                 text-align: center;
                 font-weight: normal;
+                transition: border-bottom-color 0.5s;
             }
 
             input:focus {
