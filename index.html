@@ -5,27 +5,51 @@
         <title> Australian Postdecoder </title>
         <script src="http://d3js.org/d3.v3.min.js"></script>
         <script src="queue.min.js"></script>
-
+        <link href="https://fonts.googleapis.com/css?family=Questrial" rel="stylesheet">
         <style type="text/css">
             /* HTML styling */
             html { background-color: #FAFAFA; }
             body {
-                font-family: Helvetica, Arial, sans-serif; font-size: 16px;
+                font-family: "Questrial", Helvetica, Arial, sans-serif; font-size: 16px;
                 color: #333;
+            }
+            #container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            #controls {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
             }
             a { text-decoration: none; color: #91D7E8 }
             #map { width: 1200px; height: 800px; }
-            input {
+            .postcodeInput {
+                font-family: "Questrial", Helvetica, Arial, sans-serif; font-size: 16px;
                 background: none;
                 border: none;
-                border-bottom: 1px solid white;
-                color: white;
+                border-bottom: 1px solid #333;
+                color: #333;
                 outline: none;
                 padding-bottom: 4px;
+                padding-top: 70px;
+                margin-bottom: 70px;
+                font-size: 3rem;
+                text-align: center;
+                font-weight: normal;
             }
 
             input:focus {
                 border-bottom-color: #91D7E8;
+            }
+
+            input[type=number]::-webkit-inner-spin-button, 
+            input[type=number]::-webkit-outer-spin-button { 
+                -webkit-appearance: none; 
+                margin: 0; 
             }
 
             /* SVG styling */
@@ -39,19 +63,21 @@
         </style>
     </head>
     <body>
-        <center>
+        <div id="container">
             <div id="map"></div>
-            <input style="padding-top: 70px; font-size: 120%" placeholder="Enter a postcode" type="number"></input>
-            <label>
-                Disable zoom
-                <input name="zoom" type="checkbox" />
-            </label>
+            <div id="controls">
+                <input class="postcodeInput" placeholder="Enter a postcode" type="number"></input>
+                <label>
+                    <input name="zoom" type="checkbox" />
+                    Disable zoom
+                </label>
+            </div>
             <p>An Australian version of
                 <a href="http://benfry.com/">Ben Fry</a>'s
                 <a href="http://benfry.com/zipdecode/">zipdecode</a><br>
                 based on <a href="https://github.com/NelsonMinar/zipdecode-js">Nelson Minar's D3.js code</a>.
             </p>
-        </center>
+        </div>
         <script type="text/javascript" src="postdecode.js"></script>
     </body>
 </html>
