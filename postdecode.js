@@ -2,7 +2,7 @@
 var width = 1200,
     height = 800;
 var instructions = "";
-var POSTCODE_SIZE = 3;
+var POSTCODE_SIZE = 4;
 var zoomEnabled = true;
 
 // Display: geographic projection
