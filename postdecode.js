@@ -77,8 +77,8 @@ function zoomIn(bounds, dots) {
     var x = (bounds[0][0] + bounds[1][0]) / 2;
     var y = (bounds[0][1] + bounds[1][1]) / 2;
 
-    // scale so that the current dots fit in 90% of the extent OR to 400, which is about where 1 dot can be seen.
-    var scale = Math.min(400, 0.9 / Math.max(dx / width, dy / height));
+    // scale so that the current dots fit in 90% of the extent OR to 200, which is about where 1 dot can be seen.
+    var scale = Math.min(200, 0.9 / Math.max(dx / width, dy / height));
     var translate = [width / 2 - scale * x, height / 2 - scale * y];
 
     map.transition()
