@@ -1,15 +1,24 @@
 // Display: configurable parameters (see also HTML)
 var width = Math.min(window.innerWidth, 1200),
-    height = 800;
+    height = Math.max(window.innerHeight * 0.8, 800);
 var instructions = "";
 var POSTCODE_SIZE = 4;
 var zoomEnabled = true;
 
+var b = [
+    [113.338953078, -43.6345972634],
+    [153.569469029, -10.6681857235],
+]
+
 // Display: geographic projection
 var proj = d3.geo
     .mercator()
-    .scale(800)
-    .translate([-1300, 0]);
+    .center([
+        (b[0][0] + b[1][0]) / 2,
+        (b[0][1] + b[1][1]) / 2,
+    ])
+    .scale(20 / Math.max((b[1][0] - b[0][0]) / width, (b[1][1] - b[0][1]) / height))
+    .translate([width / 2, height / 2]);
 var path = d3.geo.path().projection(proj);
 
 // Interaction: stored state
