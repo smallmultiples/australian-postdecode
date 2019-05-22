@@ -1,5 +1,5 @@
 // Display: configurable parameters (see also HTML)
-var width = 1200,
+var width = Math.min(window.innerWidth, 1200),
     height = 800;
 var instructions = "";
 var POSTCODE_SIZE = 4;
