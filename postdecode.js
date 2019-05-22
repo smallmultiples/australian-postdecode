@@ -1,6 +1,6 @@
 // Display: configurable parameters (see also HTML)
 var width = Math.min(window.innerWidth, 1200),
-    height = Math.max(window.innerHeight * 0.8, 800);
+    height = Math.max((window.innerHeight * 0.9) - 280, 800);
 var instructions = "";
 var POSTCODE_SIZE = 4;
 var zoomEnabled = true;
