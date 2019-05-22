@@ -8,7 +8,7 @@ var zoomEnabled = true;
 // Display: geographic projection
 var proj = d3.geo
     .mercator()
-    .scale(500)
+    .scale(800)
     .translate([-1300, 0]);
 var path = d3.geo.path().projection(proj);
 
